@@ -15,9 +15,16 @@ public class Unit : NetworkBehaviour
     public static event Action<Unit> AuthorityOnUnitSpawned;
     public static event Action<Unit> AuthorityOnUnitDespawned;
 
+    [SerializeField] private Targeter Targeter = null;
+
     public UnitMovement GetUnitMovement()
     {
         return unitMovement;
+    }
+
+    public Targeter GetTargeter()
+    {
+        return Targeter;
     }
 
     public override void OnStartServer()
