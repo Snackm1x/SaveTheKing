@@ -8,6 +8,15 @@ public class UnitMovement : NetworkBehaviour
     [SerializeField] private Targeter Targeter = null;
     [SerializeField] private float ChaseRange = 10f;
 
+    public override void OnStartServer()
+    {
+        GameOverHandler.ServerOnGameOver += ServerHandleGameOver;
+    }
+    public override void OnStopServer()
+    {
+        GameOverHandler.ServerOnGameOver -= ServerHandleGameOver;
+    }
+
     [ServerCallback]
     private void Update()
     {
@@ -40,11 +49,9 @@ public class UnitMovement : NetworkBehaviour
         Agent.SetDestination(hit.position);
     }
 
-    [Command]
-    public void ChaseUnit()
+    [Server]
+    private void ServerHandleGameOver()
     {
-
+        Agent.ResetPath();
     }
-
-
 }

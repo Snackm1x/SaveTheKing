@@ -1,11 +1,13 @@
 using Mirror;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class GameOverHandler : NetworkBehaviour
 {
-    private List<UnitBase> bases;
+    public static event Action ServerOnGameOver;
+    public static event Action<string> ClientOnGameOver;
+
+    private List<UnitBase> bases = new List<UnitBase>();
     public override void OnStartServer()
     {
         UnitBase.ServerOnBaseSpawned += ServerHandleBaseSpawned;
@@ -31,5 +33,15 @@ public class GameOverHandler : NetworkBehaviour
 
         if(bases.Count != 1) { return; }
 
+        var winner = bases[0].connectionToClient.connectionId;
+
+        RpcGameOver($"Player {winner}");
+        ServerOnGameOver?.Invoke();
+    }
+
+    [ClientRpc]
+    private void RpcGameOver(string winner)
+    {
+        ClientOnGameOver?.Invoke(winner);
     }
 }

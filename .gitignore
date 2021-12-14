@@ -83,3 +83,6 @@ Security
 
 # Mirror Files that we may need to uncomment at some point
 [Aa]ssets/[Mm]irror/
+
+# Text Mesh Pro
+[Aa]ssets/[Tt]ext[Mm]esh [Pp]ro/
