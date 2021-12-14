@@ -38,28 +38,20 @@ public class STKPlayer : NetworkBehaviour
         units.Remove(unit);
     }
 
-    public override void OnStartClient()
+    public override void OnStartAuthority()
     {
-        if(!isClientOnly) { return; }
+        if(NetworkServer.active) { return; }
         Unit.ServerOnUnitSpawned += AuthorityHandleUnitSpawned;
         Unit.ServerOnUnitDespawned += AuthorityHandleUnitDespawned;
     }
 
     public override void OnStopClient()
     {
-        if (!isClientOnly) { return; }
+        if (!isClientOnly || !hasAuthority) { return; }
         Unit.ServerOnUnitSpawned -= AuthorityHandleUnitSpawned;
         Unit.ServerOnUnitDespawned -= AuthorityHandleUnitDespawned;
     }
 
-    private void AuthorityHandleUnitSpawned(Unit unit)
-    {
-        if(!hasAuthority) { return; }
-        units.Add(unit);
-    }
-    private void AuthorityHandleUnitDespawned(Unit unit)
-    {
-        if (!hasAuthority) { return; }
-        units.Remove(unit);
-    }
+    private void AuthorityHandleUnitSpawned(Unit unit) => units.Add(unit);
+    private void AuthorityHandleUnitDespawned(Unit unit) => units.Remove(unit);
 }
