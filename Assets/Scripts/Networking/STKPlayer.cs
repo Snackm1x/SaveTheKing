@@ -1,12 +1,15 @@
 using Mirror;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class STKPlayer : NetworkBehaviour
 {
     private List<Unit> units = new List<Unit>();
     private List<Building> buildings = new List<Building>();
+    [SerializeField]
+    private Building[] possibleBuildings = new Building[0];
 
     public List<Unit> GetUnits()
     {
@@ -32,6 +35,17 @@ public class STKPlayer : NetworkBehaviour
         Unit.ServerOnUnitDespawned -= ServerHandleUnitDespawned;
         Building.ServerOnBuildingSpawned -= ServerHandleBuildingSpawned;
         Building.ServerOnBuildingDespawned -= ServerHandleBuildingDespawned;
+    }
+
+    [Command]
+    public void CmdTryPlaceBuilding(int buildingId, Vector3 location)
+    {
+        var buildingToSpawn = possibleBuildings.FirstOrDefault(p => p.GetId() == buildingId);
+
+        if(!buildingToSpawn) { return; }
+
+        var buildingInstance = Instantiate(buildingToSpawn.gameObject, location, buildingToSpawn.transform.rotation);
+        NetworkServer.Spawn(buildingInstance, connectionToClient);
     }
 
     private void ServerHandleUnitSpawned(Unit unit)
