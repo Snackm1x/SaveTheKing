@@ -76,7 +76,7 @@ public class UnitSelectionHandler : MonoBehaviour
         var min = UnitSelectionArea.anchoredPosition - (UnitSelectionArea.sizeDelta / 2);
         var max = UnitSelectionArea.anchoredPosition + (UnitSelectionArea.sizeDelta / 2);
 
-        stkPlayer.GetPlayerUnits().ForEach(unit =>
+        stkPlayer.GetUnits().ForEach(unit =>
         {
             if(SelectedUnits.Contains(unit)) { return; }
             var screenPosition = MainCamera.WorldToScreenPoint(unit.transform.position);
