@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8962200928504449750}
   - component: {fileID: 23972571934264613}
   - component: {fileID: 1491641579615418251}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,3 +148,4 @@ MonoBehaviour:
   rb: {fileID: 23972571934264613}
   launchForce: 10
   lifespan: 5
+  damageToDeal: 20

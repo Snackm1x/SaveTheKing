@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 110779390}
   - component: {fileID: 110779392}
   m_Layer: 0
-  m_Name: UnitSelectionHandler
+  m_Name: UnitHandlers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,7 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectionLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 256
   UnitSelectionArea: {fileID: 393924996}
 --- !u!4 &110779391
 Transform:
@@ -187,7 +187,7 @@ MonoBehaviour:
   unitSelectionHandler: {fileID: 110779390}
   layerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 1281
 --- !u!1 &393924995
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,7 +374,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh34438
+  m_Name: pb_Mesh21698
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -773,7 +773,7 @@ GameObject:
   - component: {fileID: 1157968911}
   - component: {fileID: 1157968910}
   - component: {fileID: 1157968909}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
