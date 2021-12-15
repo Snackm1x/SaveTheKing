@@ -1,4 +1,5 @@
 using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,10 @@ public class STKPlayer : NetworkBehaviour
     private List<Building> buildings = new List<Building>();
     [SerializeField]
     private Building[] possibleBuildings = new Building[0];
+    [SyncVar(hook =nameof(ClientHandleResourcesUpdated))]
+    private int resources = 500;
+
+    public event Action<int> ClientOnResourcesUpdated;
 
     public List<Unit> GetUnits()
     {
@@ -20,6 +25,22 @@ public class STKPlayer : NetworkBehaviour
     {
         return buildings;
     }
+    public int GetResources()
+    {
+        return resources;
+    }
+
+    [Server]
+    public void AddResources(int resourcesToAdd)
+    {
+        resources += resourcesToAdd;
+    }
+
+    private void ClientHandleResourcesUpdated(int oldResources, int newResources)
+    {
+        ClientOnResourcesUpdated?.Invoke(newResources);
+    }
+
 
     public override void OnStartServer()
     {
