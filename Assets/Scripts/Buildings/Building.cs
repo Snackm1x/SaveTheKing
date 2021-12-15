@@ -5,6 +5,8 @@ using UnityEngine;
 public class Building : NetworkBehaviour
 {
     [SerializeField]
+    private GameObject buildingPreview;
+    [SerializeField]
     private Sprite icon;
     [SerializeField]
     private int price = 100;
@@ -30,6 +32,11 @@ public class Building : NetworkBehaviour
     public int GetId()
     {
         return buildingId;
+    }
+
+    public GameObject GetBuildingPreview()
+    {
+        return buildingPreview;
     }
 
     public override void OnStartServer()
