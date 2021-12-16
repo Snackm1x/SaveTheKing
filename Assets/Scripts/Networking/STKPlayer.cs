@@ -36,6 +36,11 @@ public class STKPlayer : NetworkBehaviour
         resources += resourcesToAdd;
     }
 
+    public void RemoveResources(int resourcesToRemove)
+    {
+        resources -= resourcesToRemove;
+    }
+
     private void ClientHandleResourcesUpdated(int oldResources, int newResources)
     {
         ClientOnResourcesUpdated?.Invoke(newResources);

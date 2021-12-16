@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class Unit : NetworkBehaviour
 {
+    [SerializeField] private int resourceCost = 10;
     [SerializeField] private UnityEvent onSelected = null;
     [SerializeField] private UnityEvent onDeselected = null;
     [SerializeField] private UnitMovement unitMovement = null;
@@ -29,6 +30,11 @@ public class Unit : NetworkBehaviour
     public Targeter GetTargeter()
     {
         return Targeter;
+    }
+
+    public int GetResourceCost()
+    {
+        return resourceCost;
     }
 
     public override void OnStartServer()

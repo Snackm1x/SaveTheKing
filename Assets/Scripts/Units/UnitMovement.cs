@@ -43,15 +43,21 @@ public class UnitMovement : NetworkBehaviour
     [Command]
     public void CmdMove(Vector3 position)
     {
-        Targeter.ClearTarget();
-        if(!NavMesh.SamplePosition(position, out NavMeshHit hit, 1f, NavMesh.AllAreas)) { return; }
-
-        Agent.SetDestination(hit.position);
+        ServerMove(position);
     }
 
     [Server]
     private void ServerHandleGameOver()
     {
         Agent.ResetPath();
+    }
+
+    [Server]
+    public void ServerMove(Vector3 position)
+    {
+        Targeter.ClearTarget();
+        if (!NavMesh.SamplePosition(position, out NavMeshHit hit, 1f, NavMesh.AllAreas)) { return; }
+
+        Agent.SetDestination(hit.position);
     }
 }
