@@ -1,16 +1,30 @@
 using Mirror;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class STKNetworkManager : NetworkManager
 {
-    [SerializeField] private GameObject unitBasePrefab;
     [SerializeField] private GameOverHandler gameOverHandlerPrefab;
+
+    public static event Action ClientOnConnected;
+    public static event Action ClientOnDisconnected;
+
+    public override void OnClientConnect(NetworkConnection conn)
+    {
+        base.OnClientConnect(conn);
+        ClientOnConnected?.Invoke();
+    }
+
+    public override void OnClientDisconnect(NetworkConnection conn)
+    {
+        base.OnClientDisconnect(conn);
+        ClientOnDisconnected?.Invoke();
+    }
+
     public override void OnServerAddPlayer(NetworkConnection conn)
     {
         base.OnServerAddPlayer(conn);
-        var unitBaseInstance = Instantiate(unitBasePrefab, conn.identity.transform.position, conn.identity.transform.rotation);
-        NetworkServer.Spawn(unitBaseInstance, conn);
     }
 
     public override void OnServerSceneChanged(string sceneName)

@@ -13,6 +13,11 @@ public class STKPlayer : NetworkBehaviour
     private Building[] possibleBuildings = new Building[0];
     [SyncVar(hook =nameof(ClientHandleResourcesUpdated))]
     private int resources = 500;
+    [SerializeField]
+    private LayerMask buildingBlockLayer = new LayerMask();
+    private float buildingRangeLimit = 25f;
+    [SerializeField] private Transform cameraTransform;
+
 
     public event Action<int> ClientOnResourcesUpdated;
 
@@ -28,6 +33,11 @@ public class STKPlayer : NetworkBehaviour
     public int GetResources()
     {
         return resources;
+    }
+
+    public Transform GetCameraTransform()
+    {
+        return cameraTransform;
     }
 
     [Server]
@@ -70,8 +80,32 @@ public class STKPlayer : NetworkBehaviour
 
         if(!buildingToSpawn) { return; }
 
+        if(resources < buildingToSpawn.GetPrice()) { return; }
+
+        var buildingCollider = buildingToSpawn.GetComponent<BoxCollider>();
+
+        if(!CanPlaceBuilding(buildingCollider, location)) { return; }
+
         var buildingInstance = Instantiate(buildingToSpawn.gameObject, location, buildingToSpawn.transform.rotation);
         NetworkServer.Spawn(buildingInstance, connectionToClient);
+        RemoveResources(buildingToSpawn.GetPrice());
+    }
+
+    public bool CanPlaceBuilding(BoxCollider buildingCollider, Vector3 location)
+    {
+        if (Physics.CheckBox(location + buildingCollider.center, buildingCollider.size / 2, Quaternion.identity, buildingBlockLayer))
+        {
+            return false;
+        }
+
+        foreach (var b in buildings)
+        {
+            if ((location - b.transform.position).sqrMagnitude <= buildingRangeLimit * buildingRangeLimit)
+            {
+                return true;
+            }
+        };
+        return false;
     }
 
     private void ServerHandleUnitSpawned(Unit unit)
