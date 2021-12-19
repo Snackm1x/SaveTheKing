@@ -33,15 +33,11 @@ public class BuildingButton : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         priceText.text = building.GetPrice().ToString();
 
         buildingCollider = building.GetComponent<BoxCollider>();
+        player = NetworkClient.connection.identity.GetComponent<STKPlayer>();
     }
 
     private void Update()
     {
-        if(player == null)
-        {
-            player = NetworkClient.connection.identity.GetComponent<STKPlayer>();
-        }
-
         if(buildingPreviewInstance == null) { return; }
         UpdateBuildingPreview();
     }

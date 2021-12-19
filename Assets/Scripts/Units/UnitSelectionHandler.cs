@@ -22,6 +22,7 @@ public class UnitSelectionHandler : MonoBehaviour
         MainCamera = Camera.main;
         Unit.AuthorityOnUnitDespawned += AuthorityHandleUnitDespawned;
         GameOverHandler.ClientOnGameOver += ClientHandleGameOver;
+        stkPlayer = NetworkClient.connection.identity.GetComponent<STKPlayer>();
     }
 
     private void OnDestroy()
@@ -32,11 +33,6 @@ public class UnitSelectionHandler : MonoBehaviour
 
     private void Update()
     {
-        if(stkPlayer == null)
-        {
-            stkPlayer = NetworkClient.connection.identity.GetComponent<STKPlayer>();
-        }
-
         if(Mouse.current.leftButton.wasPressedThisFrame)
         {
             StartSelectionArea();

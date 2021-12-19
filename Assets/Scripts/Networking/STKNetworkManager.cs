@@ -1,4 +1,5 @@
 using Mirror;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class STKNetworkManager : NetworkManager
     public override void OnClientConnect(NetworkConnection conn)
     {
         base.OnClientConnect(conn);
+        Debug.Log("Server on client connect called!");
         ClientOnConnected?.Invoke();
     }
 
@@ -34,7 +36,10 @@ public class STKNetworkManager : NetworkManager
         var player = conn.identity.GetComponent<STKPlayer>();
 
         Players.Add(player);
+        var steamName = SteamFriends.GetPersonaName();
+        Debug.Log("Player added to server named: " + steamName);
 
+        player.SetDisplayName(steamName);
 
         player.SetPartyOwner(Players.Count == 1);
     }
@@ -58,7 +63,7 @@ public class STKNetworkManager : NetworkManager
     public override void OnServerConnect(NetworkConnection conn)
     {
         if(!isGameInProgress) { return; }
-
+        Debug.Log("Server OnServerConnect! " + conn);
         conn.Disconnect();
     }
 

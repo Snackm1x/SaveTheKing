@@ -1,6 +1,5 @@
 using Mirror;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -22,8 +21,12 @@ public class STKPlayer : NetworkBehaviour
     private bool isPartyOwner = false;
     public static event Action<bool> AuthorityPartyOwnerStateUpdated;
 
+    [SyncVar(hook = nameof(ClientHandleDisplayNameUpdated))]
+    private string displayName;
+
 
     public event Action<int> ClientOnResourcesUpdated;
+    public static event Action ClientOnInfoUpdated;
 
     public bool GetIsPartyOwner()
     {
@@ -49,6 +52,17 @@ public class STKPlayer : NetworkBehaviour
         return cameraTransform;
     }
 
+    public string GetDisplayName()
+    {
+        return displayName;
+    }
+
+    [Server]
+    public void SetDisplayName(string name)
+    {
+        displayName = name;
+    }
+
     [Server]
     public void AddResources(int resourcesToAdd)
     {
@@ -65,6 +79,10 @@ public class STKPlayer : NetworkBehaviour
         ClientOnResourcesUpdated?.Invoke(newResources);
     }
 
+    private void ClientHandleDisplayNameUpdated(string oldName, string newName)
+    {
+        ClientOnInfoUpdated?.Invoke();
+    }
 
     public override void OnStartServer()
     {
@@ -72,6 +90,8 @@ public class STKPlayer : NetworkBehaviour
         Unit.ServerOnUnitDespawned += ServerHandleUnitDespawned;
         Building.ServerOnBuildingSpawned += ServerHandleBuildingSpawned;
         Building.ServerOnBuildingDespawned += ServerHandleBuildingDespawned;
+
+        DontDestroyOnLoad(gameObject);
     }
 
     public override void OnStopServer()
@@ -161,6 +181,7 @@ public class STKPlayer : NetworkBehaviour
 
     public override void OnStopClient()
     {
+        ClientOnInfoUpdated?.Invoke();
         if (!isClientOnly) { return; }
         ((STKNetworkManager)NetworkManager.singleton).Players.Remove(this);
         if(!hasAuthority) { return; }
@@ -172,8 +193,13 @@ public class STKPlayer : NetworkBehaviour
 
     public override void OnStartClient()
     {
+        Debug.Log("Starting up client!");
+        Debug.Log("Am I the host?: " + NetworkServer.active);
         if(NetworkServer.active) { return; }
+        Debug.Log("I'm not the host, adding player to list!");
+        DontDestroyOnLoad(gameObject);
         ((STKNetworkManager)NetworkManager.singleton).Players.Add(this);
+        Debug.Log("Spawned and added player to lobby");
     }
 
     [Server]
